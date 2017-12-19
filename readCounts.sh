@@ -3,6 +3,7 @@
 #######
 #GTF="/groups/bell/jiwang/annotations/mm10/Refseq/mm10_RefSeq_curated.gtf"
 GTF="/groups/bell/jiwang/annotations/mm10/Refseq/mm10_refGene.rRNA.gtf"
+
 CORES=2
 cwd=`pwd`
 DIR_Bam="$PWD/BAMs"
