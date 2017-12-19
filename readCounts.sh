@@ -1,5 +1,8 @@
-#GENOME="/groups/bell/jiwang/Genomes/Mouse/mm10_UCSC/mm10_Refseq_index_4star"
-GTF="/groups/bell/jiwang/Genomes/Mouse/mm10_UCSC/Sequence/annotation_mm10_RefSeq/mm10_RefSeq_curated.gtf"
+#######
+## this script is to quantify read count table using GTF annotation and HTseq
+#######
+#GTF="/groups/bell/jiwang/annotations/mm10/Refseq/mm10_RefSeq_curated.gtf"
+GTF="/groups/bell/jiwang/annotations/mm10/Refseq/mm10_refGene.rRNA.gtf"
 CORES=2
 cwd=`pwd`
 DIR_Bam="$PWD/BAMs"

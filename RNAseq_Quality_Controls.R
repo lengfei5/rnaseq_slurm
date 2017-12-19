@@ -24,7 +24,7 @@ Check.RNAseq.Quality = function(read.count, design.matrix)
   raw[which(is.na(raw))] = 0
   xx = raw;
   
-  par(cex = 1.8, las = 1, mgp = c(1.6,0.5,0), mar = c(6,10,2,0.8)+0.1, tcl = -0.3)
+  par(cex = 1.8, las = 1, mgp = c(1.6,0.5,0), mar = c(6,16,2,0.8)+0.1, tcl = -0.3)
   par(mfrow=c(1,1))
   
   total = apply(raw, 2, sum)
@@ -32,9 +32,11 @@ Check.RNAseq.Quality = function(read.count, design.matrix)
   cols = match(cc, cc.uniq)
   #cols = (c(1:length(unique(cc)))-1)%/%3+1
   barplot(total/10^6, horiz = TRUE, names.arg = colnames(raw), las=1, col = cols, main='Total nb of reads quantified for features', xlab='number of reads (Million)')
-  abline(v=seq(0, 20, by=5), col='red', lty=1, lwd=2.0);#abline(v=c(20, 45), col='red', lty=1, lwd=2.0)
+  abline(v=c(1, 2, seq(5, 20, by=5)), col='red', lty=1, lwd=2.0);#abline(v=c(20, 45), col='red', lty=1, lwd=2.0)
   xx = raw
   xx[which(xx==0)] = NA
+  
+  par(cex = 1.0, las = 1, mgp = c(2,0.2,0), mar = c(16,3,2,0.2), tcl = -0.3)
   boxplot(log10(xx), las=3, col=cols, ylab='log10(nb of reads)', main='Read distribution for features')
   
   ### make DESeq object using read counts and design matrix
@@ -45,12 +47,12 @@ Check.RNAseq.Quality = function(read.count, design.matrix)
   dds <- dds[ rowSums(counts(dds)) > 10, ]
   dds <- estimateSizeFactors(dds)
   fpm = fpm(dds, robust = TRUE)
-  vsd <- vst(dds, blind = FALSE)
+  vsd <- varianceStabilizingTransformation(dds, blind = FALSE)
   
   ### boxplot (distributions of fpm) for all samples
   xx = as.matrix(fpm)
   par(mfrow=c(1,1))
-  par(cex = 1.0, las = 1, mgp = c(2,0.2,0), mar = c(10,3,2,0.2), tcl = -0.3)
+  par(cex = 1.0, las = 1, mgp = c(2,0.2,0), mar = c(16,3,2,0.2), tcl = -0.3)
   for(n in 1:ncol(xx)){
     kk = which(xx[,n]>0);
     if(n==1) boxplot(log2(xx[kk, n]), horizontal = FALSE, las=2, at=(n), ylim=c(-6, 23), xlim=c(0, (ncol(xx)+1)), names=as.character(colnames(xx)[n]),
@@ -69,15 +71,6 @@ Check.RNAseq.Quality = function(read.count, design.matrix)
   M <- cor(xx, use = "na.or.complete")
   #corrplot(M, method="circle", type = 'upper', order="hclust")
   corrplot(M, method="ellipse", order="hclust", tl.cex=1.2, cl.cex=0.7, tl.col="black", addrect=ceiling(ncol(xx)/2), col=col1(100), rect.col=c('green'), rect.lwd=2.0)
-  
-  ###  pairwise correlation and fitting (to chek if there is batch effect)
-  if(ncol(fpm)<12)
-  {
-    yy = as.matrix(fpm)
-    yy[which(yy==0)] = NA;
-    yy = log2(yy)
-    pairs(yy, lower.panel=NULL, upper.panel=panel.fitting)
-  }
   
   ### count transformation using vsd
   library("dplyr")
@@ -133,6 +126,14 @@ Check.RNAseq.Quality = function(read.count, design.matrix)
     plot(ggp);
   }
   
+  ###  pairwise correlation and fitting (to chek if there is batch effect)
+  if(ncol(fpm)<20)
+  {
+    yy = as.matrix(fpm)
+    yy[which(yy==0)] = NA;
+    yy = log2(yy)
+    pairs(yy, lower.panel=NULL, upper.panel=panel.fitting)
+  }
   
   #ggplot(pcaData, aes(PC1, PC2, color=condition, shape=type)) +
   #  geom_point(size=3) +
@@ -161,7 +162,7 @@ panel.cor <- function(x, y, digits=2, prefix="", cex.cor)
   text(.8, .8, Signif, cex=cex, col=2) 
 }
 
-panel.fitting = function (x, y, bg = NA, pch = par("pch"), cex = 0.15, col='black') 
+panel.fitting = function (x, y, bg = NA, pch = par("pch"), cex = 0.5, col='black') 
 {
   #x = yy[,1];y=yy[,2];
   #kk = which(x>0 & y>0); x=x[kk];y=y[kk]
