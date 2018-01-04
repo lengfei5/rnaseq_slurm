@@ -1,5 +1,14 @@
-## RNAseq is a pipeline to process RNA-seq data from raw data to the table for read counts 
+#######################################################
+# RNAseq is a pipeline to process RNA-seq data from raw data to the table for read counts 
+# In addition, scripts dealing with standard RNA-seq, Quant-seq and small RNA-seq are all included
+# in this folder for the moments
+# Due to its complexicity and specificity of single-cell RNA-seq analysis, another folder scRNAseq were specially made for it (../scRNAseq/).
+# while shared processing step and alignment are still found in this folder
+######################################################
 
+#####################################################
+Details for functions 
+######################################################
 Documentation for the list of functions
 download_alignment.sh
   This function is to 
