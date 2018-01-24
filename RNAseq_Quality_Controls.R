@@ -1,7 +1,7 @@
 ############# 
 ##### Collection of functions for RNA-seq data
 ############# 
-Check.RNAseq.Quality = function(read.count, design.matrix)
+Check.RNAseq.Quality = function(read.count, design.matrix, keep.All = FALSE, norms=NULL, Threshold.read.counts=10)
 {
   require(lattice);
   require(ggplot2)
@@ -44,8 +44,17 @@ Check.RNAseq.Quality = function(read.count, design.matrix)
   conds = factor(paste0(colnames(design.matrix)[-1], collapse = " + "))
   eval(parse(text = paste0("dds <- DESeqDataSetFromMatrix(countData, DataFrame(design.matrix), design = ~ ", conds, ")")))
   #dds <- DESeqDataSetFromMatrix(countData, DataFrame(design.matrix), design = ~ condition + time)
-  dds <- dds[ rowSums(counts(dds)) > 10, ]
-  dds <- estimateSizeFactors(dds)
+  
+  if(!keep.All){
+    dds <- dds[ rowSums(counts(dds)) > Threshold.read.counts, ]
+  }
+  
+  if(is.null(norms)){
+    dds <- estimateSizeFactors(dds)
+  }else{
+    sizeFactors(dds) = norms;
+  }
+  
   fpm = fpm(dds, robust = TRUE)
   vsd <- varianceStabilizingTransformation(dds, blind = FALSE)
   
