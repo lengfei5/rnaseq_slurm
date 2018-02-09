@@ -1,28 +1,35 @@
-#GENOME="/groups/bell/jiwang/Genomes/Mouse/mm10_UCSC/mm10_Refseq_index_4star"
-#GENOME="/groups/bell/jiwang/Genomes/C_elegans/ce10/ce10_index_4star"
-CORES=2
-DIR=`pwd`
+#####################################
+# script to trim adaptors for fastq files and run fastqc after trimming
+# two modules possible: cutadapt which need the adaptor sequences to be speficied
+# but the adavantage of using cutadapt isthat it can trim polyA at the same time;
+# trimglore which does not need the adaptor sequences 
+#####################################
 USE_cutadapt="TRUE";
-mkdir -p "${DIR}/logs"
+use_adatpSeq="TRUE"
+trim_polyA="TRUE";
+
+if [ "$USE_cutadapt" == "TRUE" ]; then
+    #adaptor_seq="AGATCGGAAGAGCACACGTCTGAACTCCAGTCACNNNNNNATCTCGTATGCCGTCTTCTGCTTG" # quant-seq adaptor
+    adaptor_seq="CTGTCTCTTATACACATCTCCGAGCCCACGAGAC"; # Nextera adatptor
+    minLength_overlap=3;
+    times_trimming=1;
+    minimumLength=20;
+fi
+
+CORES=1
+DIR=`pwd`
 
 DIR_input="${DIR}/ngs_raw/FASTQs"
 DIR_trimmed="${DIR}/ngs_raw/FASTQs_trimmed"
 DIR_fastqc="${DIR}/ngs_raw/FASTQCs/"
-#DIR_output="${DIR}/BAMs"
 #echo $DIR_input
 #echo $DIR_trimmed
-
 #echo $DIR_output
-#mkdir -p $DIR_output
+
 mkdir -p $DIR_trimmed
 mkdir -p $DIR_fastqc
+mkdir -p "${DIR}/logs"
 
-
-#mkdir -p ${DIR_output}/logs
-adaptor_seq="AGATCGGAAGAGCACACGTCTGAACTCCAGTCACNNNNNNATCTCGTATGCCGTCTTCTGCTTG"
-#polyA="$(echo -e ''$_{1..100}'\bA')"
-#echo $adaptor_seq
-#echo $polyA
 
 for file in ${DIR_input}/*.fastq;
 do
@@ -36,16 +43,18 @@ do
 	echo $out
 	qsub -q public.q -o ${DIR}/logs -j yes -pe smp $CORES -cwd -b y -shell y -N trimming "module load fastqc/0.11.5; \
          module load python; module load cutadapt/1.12.0;  \
-         cutadapt -a A{100} -a $adaptor_seq -n 2 -m 30 -f fastq -o ${out} $file > ${DIR_trimmed}/${out}.cutadapt.log; \
+         cutadapt -a $adaptor_seq -n $times_trimming -O $minLength_overlap -m $minimumLength -f fastq -o ${out} $file > ${DIR_trimmed}/${out}.cutadapt.log; \
          mv ${out} $DIR_trimmed; fastqc ${DIR_trimmed}/${out} -o ${DIR_fastqc}"
         
 	cd $DIR;
 
     else
-	echo qsub -q public.q -o ${DIR}/logs -j yes -pe smp $CORES -cwd -b y -shell y -N trimming "module load fastqc/0.11.5; \
-         module load trimgalore/0.3.7;\
-         trim_galore $file --phred33 --fastqc --fastqc_args \"--nogroup --outdir ${DIR_fastqc}\" \
-         --adapter $adaptor_seq --stringency 3 --dont_gzip --length 20 -o $DIR_trimmed --clip_R1 12;" 
+	qsub -q public.q -o ${DIR}/logs -j yes -pe smp $CORES -cwd -b y -shell y -N trimming " \
+        module load fastqc/0.11.5; \
+        cutadapt/1.12.0;\
+        /home/imp/jingkui.wang/local/bin/trim_galore $file --phred33 \
+        --fastqc --fastqc_args \"--nogroup --outdir ${DIR_fastqc}\" \
+        --nextera --stringency 1 --dont_gzip --length 10 -o $DIR_trimmed;" 
     fi
     #break;
 done
