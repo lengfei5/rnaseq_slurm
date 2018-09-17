@@ -20,3 +20,5 @@ download_alignment.sh
     
   Input is text file with URL; particular cares should be taken for format of this text file
   Improvement need to be done to make it more flexible
+
+- why there is no color in emacs ???
