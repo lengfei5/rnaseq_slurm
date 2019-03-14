@@ -2,7 +2,8 @@
 # script to trim adaptors for fastq files and run fastqc after trimming
 # two modules possible: cutadapt which need the adaptor sequences to be speficied
 # but the adavantage of using cutadapt isthat it can trim polyA at the same time;
-# trimglore which does not need the adaptor sequences 
+# trimglore which does not need the adaptor sequences and this option is removed now
+#  
 #####################################
 USE_cutadapt="TRUE";
 use_adatpSeq="TRUE"

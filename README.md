@@ -1,7 +1,7 @@
 # RNA-seq pipeline for bulk and single-cell RNA seq data (in slurm and make it in nextflow one day)
 ### RNAseq is a pipeline to process RNA-seq data from raw data to the table for read counts 
-### In addition, scripts dealing with standard RNA-seq, Quant-seq and small RNA-seq are all included, in this folder for the moments, due to its complexicity and specificity of single-cell RNA-seq analysis, another folder scRNAseq were specially made for it (../scRNAseq/).
-# while shared processing step and alignment are still found in this folder
+     In addition, scripts dealing with standard RNA-seq, Quant-seq and small RNA-seq are all included, in this folder fo   r the moments, due to its complexicity and specificity of single-cell RNA-seq analysis, another folder scRNAseq were specially made for it (../scRNAseq/).
+ while shared processing step and alignment are still found in this folder
 ######################################################
 
 
