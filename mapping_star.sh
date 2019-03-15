@@ -89,7 +89,7 @@ do
     extension="${bam##*.}"
     #echo $bam
     out="${bam%.$extension}"
-    bam="${bam%.$extension}.bam"
+    bam="${bam%.$extension}"
     echo "bam file -- $bam"
     
     # creat the script for each sample
@@ -107,7 +107,7 @@ do
 #SBATCH --job-name $jobName
 
 module load star/2.5.2b-foss-2017a
-
+module load samtools/1.9-foss-2017a
 EOF
     
     case "$genome" in 
@@ -118,14 +118,17 @@ STAR --runThreadN $nb_cores --genomeDir $GENOME --readFilesIn $file \
 --outFilterMismatchNoverLmax $mismatch_ratio \
 --outFilterMatchNminOverLread $mappedLength_ratio \
 --outFilterType BySJout --outSAMtype BAM SortedByCoordinate \
---outWigType wiggle --outWigNorm RPM;	    
+--outWigType wiggle --outWigNorm RPM;
+samtools index ${OUT}/${bam}Aligned.sortedByCoord.out.bam
+
 EOF
 	;;
 	"mm10")
 	    cat <<EOF >> $script
 STAR --runThreadN $nb_cores --genomeDir $GENOME --readFilesIn $file \
 --outFileNamePrefix ${OUT}/${out} --outSAMtype BAM SortedByCoordinate \
---outWigType wiggle --outWigNorm RPM; "
+--outWigType wiggle --outWigNorm RPM;
+samtools index ${OUT}/${bam}Aligned.sortedByCoord.out.bam
 EOF
 	    ;;
     esac
