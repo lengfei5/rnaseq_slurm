@@ -3,7 +3,11 @@
 RNAseq is a pipeline to process RNA-seq data from raw data to the table for read counts 
      In addition, scripts dealing with standard RNA-seq, Quant-seq and small RNA-seq are all included, in this folder fo   r the moments, due to its complexicity and specificity of single-cell RNA-seq analysis, another folder scRNAseq were specially made for it (../scRNAseq/).
  while shared processing step and alignment are still found in this folder
-######################################################
+
+
+now the RNAs-seq data mapped to the WBcel235; and ChIP-seq and ATAC-seq data were mapped to ce11.
+there are slight differences betwee those two, even though they are supposed to be the same.
+
 
 
 #####################################################
