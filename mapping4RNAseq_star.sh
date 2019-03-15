@@ -1,5 +1,5 @@
 #########
-## this script is to align RNA-seq data using Star
+# this script is to align RNA-seq data using Star
 #########
 while getopts ":hg:D:c:" opts; do
     case "$opts" in
