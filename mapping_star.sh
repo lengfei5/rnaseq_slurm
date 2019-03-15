@@ -62,7 +62,7 @@ esac
 
 # nb of cpus
 if [ -z "$nb_cores"]; then
-    nb_cores=6;
+    nb_cores=4;
 fi
 
 # fastq directory
@@ -72,12 +72,15 @@ fi
 
 cwd=`pwd`
 OUT="${cwd}/BAMs"
+dir_logs=$PWD/logs
 
 echo "fastq folder -- $DIR_input"
 echo "output bam folder -- $OUT"
 echo "nb of cpus -- $nb_cores "
 mkdir -p $OUT;
-mkdir -p "$PWD/logs"
+mkdir -p $dir_logs
+jobName='star'
+
 
 for file in `ls ${DIR_input}/*.fq ${DIR_input}/*.fastq  2> /dev/null` ;
 do
@@ -89,18 +92,46 @@ do
     bam="${bam%.$extension}.bam"
     echo "bam file -- $bam"
     
+    # creat the script for each sample
+    script=$dir_logs/${bam}_${jobName}.sh
+    cat <<EOF > $script
+#!/usr/bin/bash
+
+#SBATCH --cpus-per-task=$nb_cores
+#SBATCH --time=120
+#SBATCH --mem=8000
+#SBATCH --ntasks=1
+#SBATCH --nodes=1
+#SBATCH -o $dir_logs/${bam}.out
+#SBATCH -e $dir_logs/${bam}.err
+#SBATCH --job-name $jobName
+
+module load star/2.5.2b-foss-2017a
+
+EOF
+    
     case "$genome" in 
 	"ce11") 
-	    echo  qsub -q public.q -o ${cwd}/logs -j yes -pe smp $nb_cores -cwd -b y -shell y -N star_mapping "module load star/2.5.0a; STAR --runThreadN $nb_cores --genomeDir $GENOME --readFilesIn $file --outFileNamePrefix ${OUT}/$bam --alignIntronMax $max_IntronL --outFilterMismatchNoverLmax $mismatch_ratio --outFilterMatchNminOverLread $mappedLength_ratio --outFilterType BySJout --outSAMtype BAM SortedByCoordinate --outWigType wiggle --outWigNorm RPM; " 
-	    ;;
-	
+	    cat <<EOF >> $script
+STAR --runThreadN $nb_cores --genomeDir $GENOME --readFilesIn $file \
+--outFileNamePrefix ${OUT}/$bam --alignIntronMax $max_IntronL \
+--outFilterMismatchNoverLmax $mismatch_ratio \
+--outFilterMatchNminOverLread $mappedLength_ratio \
+--outFilterType BySJout --outSAMtype BAM SortedByCoordinate \
+--outWigType wiggle --outWigNorm RPM;	    
+EOF
+	;;
 	"mm10")
-	    qsub -q public.q -o ${cwd}/logs -j yes -pe smp $nb_cores -cwd -b y -shell y -N star_mapping "module load star/2.5.0a; \
-   STAR --runThreadN $nb_cores --genomeDir $GENOME --readFilesIn $file \
-   --outFileNamePrefix ${OUT}/${out} --outSAMtype BAM SortedByCoordinate \
-   --outWigType wiggle --outWigNorm RPM; "
+	    cat <<EOF >> $script
+STAR --runThreadN $nb_cores --genomeDir $GENOME --readFilesIn $file \
+--outFileNamePrefix ${OUT}/${out} --outSAMtype BAM SortedByCoordinate \
+--outWigType wiggle --outWigNorm RPM; "
+EOF
 	    ;;
     esac
-    
-    #break;
+
+   cat $script;
+   sbatch $script 
+   #break;
+
 done
