@@ -29,7 +29,7 @@ do
     echo $file
     fname="$(basename $file)"
     #echo $fname
-    file_output=${fname%.bam}.txt
+    file_output=${fname%.bam}
     #echo $file_output
 
     script=${dir_logs}/$(basename $file)_${jobName}.sh
@@ -46,9 +46,15 @@ do
 #SBATCH --job-name $jobName
 
 module load htseq/0.9.1-foss-2017a-python-2.7.13
+
 htseq-count -f $format -s $strandSpec -a $cutoff_quality -t exon \
 -i $ID_feature -m $mode -f bam $file $GTF \
 > ${DIR_output}/$file_output
+
+htseq-count -f $format -s $strandSpec -a $cutoff_quality -t exon \
+-i $ID_feature -m $mode -f bam $file $GTF \
+> ${DIR_output}/$file_output
+
 
 EOF
 
