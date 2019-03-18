@@ -53,6 +53,6 @@ htseq-count -f $format -s $strandSpec -a $cutoff_quality -t exon \
 EOF
 
     cat $script;  
-    
+    sbatch $script
     #break;
 done
