@@ -114,11 +114,14 @@ EOF
 	"ce11") 
 	    cat <<EOF >> $script
 STAR --runThreadN $nb_cores --genomeDir $GENOME --readFilesIn $file \
---outFileNamePrefix ${OUT}/$bam --alignIntronMax $max_IntronL \
+--outFileNamePrefix ${OUT}/$bam \
+--alignIntronMax $max_IntronL \
 --outFilterMismatchNoverLmax $mismatch_ratio \
 --outFilterMatchNminOverLread $mappedLength_ratio \
---outFilterType BySJout --outSAMtype BAM SortedByCoordinate \
---outWigType wiggle --outWigNorm RPM;
+--outFilterType BySJout \
+--outSAMtype BAM SortedByCoordinate \
+--outWigType wiggle \
+--outWigNorm RPM;
 samtools index ${OUT}/${bam}Aligned.sortedByCoord.out.bam
 
 EOF
