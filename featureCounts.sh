@@ -16,7 +16,7 @@ cutoff_quality=10
 
 DIR=`pwd`
 DIR_input="${DIR}/BAMs"
-DIR_output="${DIR}/featurecounts"
+DIR_output="${DIR}/featurecounts_Q0_multiqmapper"
 dir_logs=$PWD/logs
 echo $DIR_input
 echo $DIR_output
@@ -52,7 +52,9 @@ featureCounts -t exon -a $GTF -Q $cutoff_quality -g gene_id \
 -s $strandSpec $file; \
 featureCounts -t exon -a $GTF -Q $cutoff_quality -g gene_biotype \
 -o ${DIR_output}/${file_output}_biotype.featureCounts.txt \
--s $strandSpec $file 
+-s $strandSpec $file; \
+cut -f 1,7 ${DIR_output}/${file_output}_biotype.featureCounts.txt | tail -n +3 \
+> ${DIR_output}/${file_output}_biotype.summary.txt;
 
 EOF
 
