@@ -13,7 +13,7 @@ trim_polyA="TRUE";
 minLength_overlap=3;
 times_trimming=1;
 minimumLength=20;
-firstbpToClip=6
+firstbpToClip=4
 
 DIR=`pwd`
 DIR_input="${DIR}/ngs_raw/FASTQs"

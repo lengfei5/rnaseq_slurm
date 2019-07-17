@@ -1,8 +1,8 @@
 ###################
 ## bam2fastq script
 ###################
-DIR_INPUT="${PWD}/ngs_raw/BAMs"
-DIR_OUT="${PWD}/ngs_raw/FASTQs"
+DIR_INPUT="${PWD}/ngs_raw/FASTQs"
+DIR_OUT="${PWD}/ngs_raw/FASTQs_umi"
 dir_logs=$PWD/logs
 #echo ${DIR_OUT};
 
@@ -32,14 +32,12 @@ do
 #SBATCH -e ${dir_logs}/${fname}.err 
 #SBATCH --job-name umi_extract
 
-#module load bedtools/2.25.0-foss-2017a;
-#bamToFastq -i $file -fq ${DIR_OUT}/${fname}.fastq;
-conda activate umitools
-umi_tools extract --stdin=$file --bc-pattern=NNNNNN --log=${dir_log}/${fname}_processed.log --stdout ${DIR_OUT}/${fname}_umi_extract.fastq
+source activate umitools
+umi_tools extract --stdin=$file --bc-pattern=NNNNNN --log=${dir_logs}/${fname}_processed.log --stdout ${DIR_OUT}/${fname}_umi_extract.fastq
 
 EOF
     
-    #cat $script;
+    cat $script;
     sbatch $script
     #break;
     
