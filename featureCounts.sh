@@ -16,7 +16,7 @@ cutoff_quality=10
 
 DIR=`pwd`
 DIR_input="${DIR}/BAMs"
-DIR_output="${DIR}/featurecounts_Q0_multiqmapper"
+DIR_output="${DIR}/featurecounts_Q_${cutoff_quality}"
 dir_logs=$PWD/logs
 echo $DIR_input
 echo $DIR_output

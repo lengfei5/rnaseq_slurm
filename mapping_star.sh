@@ -39,9 +39,9 @@ done
 # select genome and parameters accordingly
 case "$genome" in
     "ce11")
-        echo "alignment to WBcel235 "
+ echo "alignment to WBcel235 "
         GENOME="/groups/bell/jiwang/Genomes/C_elegans/WBcel235/index_4star"
-	
+ 
 	mismatch_ratio=0.3; # max nb of mismatchi is mismatch_ratio * readLength (defaut 0.3)
 	mappedLength_ratio=0.66; # the ratio between mapped length and readd length (defaut 0.66)
 	max_IntronL=50000;
