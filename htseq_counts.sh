@@ -1,5 +1,5 @@
 #####
-# count reads with HTSeq
+# count reads of RNA-seq data with HTSeq
 #####
 # this gtf has all annotation including non-coding regions and miRNAs
 #GTF="/groups/bell/jiwang/Genomes/C_elegans/WBcel235/Sequence_Annotation/Caenorhabditis_elegans.WBcel235.88.gtf"
