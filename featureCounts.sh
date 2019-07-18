@@ -1,7 +1,8 @@
-#####
-# count reads of RNA-seq data using featureCounts
-#####
-# this gtf has all annotation including non-coding regions and miRNAs
+####################
+# Count reads of RNA-seq data using featureCounts
+# Here teh gtf files used has all annotation including non-coding regions and miRNAs
+# because we want to counts reads not only for gene features but also biotypes (e.g. protein coding genes and miRNAs)
+####################
 GTF="/groups/bell/jiwang/Genomes/C_elegans/WBcel235/Sequence_Annotation/Caenorhabditis_elegans.WBcel235.88.gtf"
 # only protein coding genes
 #GTF='/groups/cochella/jiwang/annotations/Caenorhabditis_elegans.WBcel235.88_proteinCodingGenes.gtf'
