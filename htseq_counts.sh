@@ -16,7 +16,7 @@ while getopts ":hD:s:q:m:" opts; do
             echo "Example:"
 	    echo "$0 (all default parameters)"
             echo "$0 -s yes -q 10 -m intersection-nonempty"
-            echo "$0 -D BAMs_dedup -s yes -q 10"
+            echo "$0 -D $PWD/BAMs_dedup -s yes -q 10 (absolute path)"
 
             exit 0
             ;;
@@ -50,13 +50,13 @@ DIR=`pwd`
 if [ -z "$DIR_input" ]; then DIR_input="$PWD/BAMs"; fi; # bam directory
 if [ -z "$strandSpec" ]; then strandSpec=yes; fi # specificity
 if [ -z "$cutoff_quality" ]; then cutoff_quality=10; fi; # cutoff of read quality
-if [ -z "$mode" ]; mode="intersection-nonempty"; fi;
+if [ -z "$mode" ]; then mode="intersection-nonempty"; fi;
 
 ID_feature="gene_id"
-DIR_output="${DIR}/htseq_counts"
+DIR_output="${DIR}/htseq_counts_$(basename $DIR_input)"
 dir_logs=$PWD/logs
-echo $DIR_input
-echo $DIR_output
+echo "input folder -- " $DIR_input
+echo "output folder -- "$DIR_output
 
 # only protein coding genes
 #GTF="/groups/bell/jiwang/Genomes/C_elegans/WBcel235/Sequence_Annotation/Caenorhabditis_elegans.WBcel235.88.gtf"
@@ -97,8 +97,7 @@ htseq-count -f $format -s $strandSpec -a $cutoff_quality -t exon \
 EOF
 
     cat $script;  
-    sbatch $script
-    
-    # break;
+    sbatch $script    
+    #break;
 
 done
