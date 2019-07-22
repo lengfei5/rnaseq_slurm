@@ -70,7 +70,7 @@ do
     echo $file
     fname="$(basename $file)"
     #echo $fname
-    file_output=${fname%.bam}
+    file_output=${fname%.bam}.txt
     #echo $file_output
 
     script=${dir_logs}/$(basename $file)_${jobName}.sh
