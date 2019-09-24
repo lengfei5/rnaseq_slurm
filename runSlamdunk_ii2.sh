@@ -13,7 +13,7 @@
 OUT=$PWD/slamdunk_R7799_trimmed_ii2
 
 # input files
-files=/groups/bell/jiwang/Projects/Jorge/NGS_requests/R7799_slamseq/ngs_raw/FASTQs_trimmed/CDMYJANXX_1_87750_CGATCTrandom_trimmed.fastq 
+files=/groups/bell/jiwang/Projects/Jorge/NGS_requests/R7799_slamseq/ngs_raw/FASTQs_trimmed/*.fastq 
 
 REF=/groups/cochella/jiwang/scripts/slamseq/reference/mm10/genome.fa
 FILTERBED=/groups/cochella/jiwang/scripts/slamseq/annotation/mm10_Annotation_BurkardT/170614custom_mESCannotation_mapping_Thomas.bed
