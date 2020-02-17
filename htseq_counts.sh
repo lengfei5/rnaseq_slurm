@@ -9,7 +9,7 @@ while getopts ":hG:D:s:q:m:" opts; do
             echo "available genomes: WBcel235"
             echo "Usage: "
             echo "-h help"
-	    echo "-G gtf file for gene annotation"
+	    echo "-G gtf file for gene annotation (default: protein coding and non-coding genes)"
             echo "-D directory of bam files (by default $PWD/BAMs)"
             echo "-s strand-specifity (no, yes, reverse)"
 	    echo "-q threshold of read quality (default value 10)"
