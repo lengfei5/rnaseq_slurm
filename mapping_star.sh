@@ -55,7 +55,7 @@ case "$genome" in
 
     "hg38")
         echo "alignment to hg38 UCSC"
-        GENOME="/groups/cochella/jiwang/Genomes/Human/hg38/sequence/STARIndex"
+        GENOME='/groups/cochella/jiwang/Genomes/Human/hg38/sequence/index_4star'
         ;;
   
     *)
@@ -67,7 +67,7 @@ esac
 
 # nb of cpus
 if [ -z "$nb_cores"]; then
-    nb_cores=12;
+    nb_cores=8;
 fi
 
 # fastq directory
@@ -102,8 +102,8 @@ do
     cat <<EOF > $script
 #!/usr/bin/bash
 
-#SBATCH --cpus-per-task=10
-#SBATCH --time=180
+#SBATCH --cpus-per-task=$nb_cores
+#SBATCH --time=90
 #SBATCH --mem=50000
 #SBATCH --ntasks=1
 #SBATCH --nodes=1
@@ -132,10 +132,12 @@ EOF
     else
 	cat <<EOF >> $script
 STAR --runThreadN $nb_cores --genomeDir $GENOME --readFilesIn $file \
---outFileNamePrefix ${OUT}/${out} --outSAMtype BAM SortedByCoordinate \
---outWigType wiggle --outWigNorm RPM;
+--outFileNamePrefix ${OUT}/${out} \
+--outSAMtype BAM Unsorted
 
-samtools index ${OUT}/${bam}Aligned.sortedByCoord.out.bam
+samtools sort -o ${OUT}/${bam}_sorted.bam ${OUT}/${bam}Aligned.out.bam
+samtools index ${OUT}/${bam}_sorted.bam
+
 EOF
 	
     fi
