@@ -32,7 +32,7 @@ do
 #SBATCH -e ${dir_logs}/${fname}.err 
 #SBATCH --job-name ${jobName}
 
-source activate umitools
+ml load umi-tools/1.0.0-foss-2018b-python-3.6.6
 umi_tools dedup --stdin=$file --log=${dir_logs}/${fname}_${jobName}.log --stdout ${DIR_OUT}/${fname}_umiDedup.bam
 
 EOF
