@@ -8,7 +8,7 @@ while getopts ":hg:D:c:" opts; do
             echo "available genomes: ce11 and mm10"
             echo "Usage: "
 	    echo "-h help"
-	    echo "-g genome (ce11, mm10)"
+	    echo "-g genome (ce11, mm10, hg38)"
 	    echo "-D directory of fastq file; by default ngs_raw/FASTQs"
 	    echo "-c nb of cores to use in cluster ; 6 is by default"
 	    echo "Example:"
@@ -49,10 +49,15 @@ case "$genome" in
 	;;
     
     "mm10")
-        echo "alignment to mm10"
+        echo "alignment to mm10 RefSeq"
         GENOME="/groups/bell/jiwang/Genomes/Mouse/mm10_UCSC/mm10_Refseq_index_4star"
         ;;
-    
+
+    "hg38")
+        echo "alignment to hg38 UCSC"
+        GENOME="/groups/cochella/jiwang/Genomes/Human/hg38/sequence/STARIndex"
+        ;;
+  
     *)
         echo " No indexed GENOME Found !! "
         echo "Usage: $0 -g mm10 "
@@ -98,20 +103,19 @@ do
 #!/usr/bin/bash
 
 #SBATCH --cpus-per-task=$nb_cores
-#SBATCH --time=120
-#SBATCH --mem=8000
+#SBATCH --time=240
+#SBATCH --mem=16000
 #SBATCH --ntasks=1
 #SBATCH --nodes=1
 #SBATCH -o $dir_logs/${bam}.out
 #SBATCH -e $dir_logs/${bam}.err
 #SBATCH --job-name $jobName
 
-module load star/2.5.2b-foss-2017a
-module load samtools/1.9-foss-2017a
+module load star/2.5.2a-foss-2018b
+module load samtools/1.9-foss-2018b
 EOF
     
-    case "$genome" in 
-	"ce11") 
+    if [ "$genome" == "ce11" ]; then
 	    cat <<EOF >> $script
 STAR --runThreadN $nb_cores --genomeDir $GENOME --readFilesIn $file \
 --outFileNamePrefix ${OUT}/$bam \
@@ -125,17 +129,16 @@ STAR --runThreadN $nb_cores --genomeDir $GENOME --readFilesIn $file \
 samtools index ${OUT}/${bam}Aligned.sortedByCoord.out.bam
 
 EOF
-	;;
-	"mm10")
-	    cat <<EOF >> $script
+    else
+	cat <<EOF >> $script
 STAR --runThreadN $nb_cores --genomeDir $GENOME --readFilesIn $file \
 --outFileNamePrefix ${OUT}/${out} --outSAMtype BAM SortedByCoordinate \
 --outWigType wiggle --outWigNorm RPM;
 samtools index ${OUT}/${bam}Aligned.sortedByCoord.out.bam
 EOF
-	    ;;
-    esac
-
+	
+    fi
+    
    cat $script;
    sbatch $script 
    #break;
