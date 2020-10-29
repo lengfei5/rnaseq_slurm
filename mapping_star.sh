@@ -67,7 +67,7 @@ esac
 
 # nb of cpus
 if [ -z "$nb_cores"]; then
-    nb_cores=4;
+    nb_cores=12;
 fi
 
 # fastq directory
@@ -102,9 +102,9 @@ do
     cat <<EOF > $script
 #!/usr/bin/bash
 
-#SBATCH --cpus-per-task=$nb_cores
-#SBATCH --time=240
-#SBATCH --mem=16000
+#SBATCH --cpus-per-task=10
+#SBATCH --time=180
+#SBATCH --mem=50000
 #SBATCH --ntasks=1
 #SBATCH --nodes=1
 #SBATCH -o $dir_logs/${bam}.out
@@ -134,6 +134,7 @@ EOF
 STAR --runThreadN $nb_cores --genomeDir $GENOME --readFilesIn $file \
 --outFileNamePrefix ${OUT}/${out} --outSAMtype BAM SortedByCoordinate \
 --outWigType wiggle --outWigNorm RPM;
+
 samtools index ${OUT}/${bam}Aligned.sortedByCoord.out.bam
 EOF
 	
@@ -141,6 +142,6 @@ EOF
     
    cat $script;
    sbatch $script 
-   #break;
+   break;
 
 done
