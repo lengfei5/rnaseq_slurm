@@ -32,7 +32,7 @@ do
 #SBATCH -e ${dir_logs}/${fname}.err 
 #SBATCH --job-name umi_extract
 
-source activate umitools
+ml load umi-tools/1.0.0-foss-2018b-python-3.6.6
 umi_tools extract --stdin=$file --bc-pattern=NNNNNN --log=${dir_logs}/${fname}_processed.log --stdout ${DIR_OUT}/${fname}_umi_extract.fastq
 
 EOF
