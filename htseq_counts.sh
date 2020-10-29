@@ -56,8 +56,11 @@ if [ -z "$DIR_input" ]; then DIR_input="$PWD/BAMs"; fi; # bam directory
 # GTF file
 # protein-coding and non-coding (default)
 if [ -z "$GTF" ]; then
-    GTF="/groups/cochella/jiwang/annotations/Caenorhabditis_elegans.WBcel235.88.gtf"; 
+    echo 'Error -- GTF file is missing '
+    exit 1
+    #GTF="/groups/cochella/jiwang/annotations/Caenorhabditis_elegans.WBcel235.88.gtf"; 
 fi;
+
 # only protein coding genes
 # GTF='/groups/cochella/jiwang/annotations/Caenorhabditis_elegans.WBcel235.88_proteinCodingGenes.gtf'# protein-coding and non-coding
 

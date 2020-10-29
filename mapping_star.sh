@@ -137,6 +137,7 @@ STAR --runThreadN $nb_cores --genomeDir $GENOME --readFilesIn $file \
 
 samtools sort -o ${OUT}/${bam}_sorted.bam ${OUT}/${bam}Aligned.out.bam
 samtools index ${OUT}/${bam}_sorted.bam
+rm ${OUT}/${bam}Aligned.out.bam
 
 EOF
 	
@@ -144,6 +145,6 @@ EOF
     
    cat $script;
    sbatch $script 
-   break;
+   #break;
 
 done
