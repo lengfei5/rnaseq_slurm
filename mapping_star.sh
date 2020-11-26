@@ -103,12 +103,12 @@ do
 #!/usr/bin/bash
 
 #SBATCH --cpus-per-task=$nb_cores
-#SBATCH --time=90
-#SBATCH --mem=50000
+#SBATCH --time=120
+#SBATCH --mem=25G
 #SBATCH --ntasks=1
 #SBATCH --nodes=1
-#SBATCH -o $dir_logs/${bam}.out
-#SBATCH -e $dir_logs/${bam}.err
+#SBATCH -o $dir_logs/${bam}.star.out
+#SBATCH -e $dir_logs/${bam}.star.err
 #SBATCH --job-name $jobName
 
 module load star/2.5.2a-foss-2018b
@@ -123,10 +123,11 @@ STAR --runThreadN $nb_cores --genomeDir $GENOME --readFilesIn $file \
 --outFilterMismatchNoverLmax $mismatch_ratio \
 --outFilterMatchNminOverLread $mappedLength_ratio \
 --outFilterType BySJout \
---outSAMtype BAM SortedByCoordinate \
---outWigType wiggle \
---outWigNorm RPM;
-samtools index ${OUT}/${bam}Aligned.sortedByCoord.out.bam
+--outSAMtype BAM Unsorted
+
+samtools sort -o ${OUT}/${bam}_sorted.bam ${OUT}/${bam}Aligned.out.bam
+samtools index ${OUT}/${bam}_sorted.bam
+rm ${OUT}/${bam}Aligned.out.bam
 
 EOF
     else
