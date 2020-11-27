@@ -100,7 +100,7 @@ do
 
 # module load python/2.7.13-foss-2017a
 # module load htseq/0.9.1-foss-2017a-python-2.7.13
-source activate quantseq
+ml load htseq/0.11.2-foss-2018b-python-3.6.6
 
 htseq-count -f $format -s $strandSpec -a $cutoff_quality -t exon \
 -i $ID_feature -m $mode $file $GTF \
