@@ -50,8 +50,8 @@ do
 #SBATCH -e $DIR/logs/$fname.err
 #SBATCH --job-name $jobName
 
-module load cutadapt/1.9.1-foss-2017a-python-2.7.13
-module load fastqc/0.11.5-java-1.8.0_121
+module load cutadapt/1.18-foss-2018b-python-3.6.6
+module load fastqc/0.11.8-java-1.8
 
 cutadapt -a $adaptor_seq -u $firstbpToClip \
 -n $times_trimming --overlap $minLength_overlap -m $minimumLength -f fastq \
