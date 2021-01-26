@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-#SBATCH --cpus-per-task=4
+#SBATCH --cpus-per-task=32
 #SBATCH --qos=medium
 #SBATCH --time=2-00:00:00
 #SBATCH --partition=c
@@ -16,6 +16,7 @@ module load star/2.5.2a-foss-2018b
 
 Genome='/groups/tanaka/People/current/jiwang/Genomes/axolotl/AmexG_v6.DD.corrected.round2.chr.fa'
 GTF='/groups/tanaka/People/current/jiwang/Genomes/axolotl/AmexT_v47.release.gtf'
-OUT='/groups/tanaka/People/current/jiwang/Genomes/axolotl/STAR/AmexG_v6.DD'
+OUT=${PWD}/ax6
+mkdir -p ${PWD}/ax6
 
-STAR --runMode genomeGenerate --runThreadN 1 --genomeDir $OUT --genomeFastaFiles $Genome --sjdbGTFfile $GTF --limitGenomeGenerateRAM 161061273600
+STAR --runMode genomeGenerate --runThreadN 32 --genomeDir $OUT --genomeFastaFiles $Genome --sjdbGTFfile $GTF --limitGenomeGenerateRAM 161061273600 --genomeSAsparseD 2
