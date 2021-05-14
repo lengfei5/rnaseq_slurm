@@ -7,7 +7,6 @@
 #  
 #####################################
 adaptor_seq="AGATCGGAAGAGCACACGTCTGAACTCCAGTCACNNNNNNATCTCGTATGCCGTCTTCTGCTTG" # quant-seq adaptor
-#adaptor_seq="CTGTCTCTTATACACATCTCCGAGCCCACGAGAC"; # Nextera adatptor
 trim_polyA="TRUE";
 
 minLength_overlap=3;

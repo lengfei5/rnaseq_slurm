@@ -104,7 +104,7 @@ do
 
 #SBATCH --cpus-per-task=$nb_cores
 #SBATCH --time=120
-#SBATCH --mem=16G
+#SBATCH --mem=64G
 #SBATCH --ntasks=1
 #SBATCH --nodes=1
 #SBATCH -o $dir_logs/${bam}.star.out
