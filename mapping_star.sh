@@ -50,7 +50,7 @@ case "$genome" in
     
     "mm10")
         echo "alignment to mm10 RefSeq"
-        GENOME="/groups/bell/jiwang/Genomes/Mouse/mm10_UCSC/mm10_Refseq_index_4star"
+        GENOME="/groups/tanaka/People/current/jiwang/Genomes/Mouse/mm10_UCSC/mm10_Refseq_index_4star"
         ;;
 
     "hg38")

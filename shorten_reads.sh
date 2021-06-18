@@ -4,18 +4,8 @@
 # but the adavantage of using cutadapt isthat it can trim polyA at the same time (however this polyA trimming is not
 # implemented for some reasons)
 # trimglore which does not need the adaptor sequences and this option is removed now
-#
-# add polyA trimming in cutadapt
+#  
 #####################################
-#adaptor_seq="AGATCGGAAGAGCACACGTCTGAACTCCAGTCACNNNNNNATCTCGTATGCCGTCTTCTGCTTG" # quant-seq adaptor
-adaptor_seq="A{10}"
-
-trim_polyA="TRUE";
-
-minLength_overlap=3; # default 3 
-times_trimming=1;# default 1 
-minimumLength=20; # default 0
-firstbpToClip=0 # nb of first bps were clipped 
 
 DIR=`pwd`
 DIR_input="${DIR}/ngs_raw/FASTQs"
@@ -37,7 +27,7 @@ do
     cd $DIR_input;
     out=`basename $trimmed`;
     echo $out
-    
+            
     # creat the script for each sample
     script=$PWD/${fname}_${jobName}.sh
     cat <<EOF > $script
@@ -53,14 +43,10 @@ do
 #SBATCH --job-name $jobName
 
 module load cutadapt/1.18-foss-2018b-python-3.6.6
-module load fastqc/0.11.8-java-1.8
 
-cutadapt -a $adaptor_seq -u $firstbpToClip \
--n $times_trimming --overlap $minLength_overlap -m $minimumLength -f fastq \
--o ${out} $file > ${DIR_trimmed}/${out}.cutadapt.log;
+cutadapt -f fastq -l 75 -o ${out} $file > ${DIR_trimmed}/${out}.cutadapt.log;
 mv ${out} $DIR_trimmed
 
-fastqc ${DIR_trimmed}/${out} -o ${DIR_fastqc}
 
 EOF
 
@@ -69,5 +55,4 @@ EOF
     cd $DIR;
     
     #break;
-    
 done
