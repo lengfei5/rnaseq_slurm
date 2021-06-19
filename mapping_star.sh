@@ -103,7 +103,7 @@ do
 #!/usr/bin/bash
 
 #SBATCH --cpus-per-task=$nb_cores
-#SBATCH --time=120
+#SBATCH --time=240
 #SBATCH --mem=64G
 #SBATCH --ntasks=1
 #SBATCH --nodes=1
