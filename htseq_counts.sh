@@ -64,13 +64,14 @@ fi;
 # only protein coding genes
 # GTF='/groups/cochella/jiwang/annotations/Caenorhabditis_elegans.WBcel235.88_proteinCodingGenes.gtf'# protein-coding and non-coding
 
-if [ -z "$strandSpec" ]; then strandSpec=yes; fi # specificity
+if [ -z "$strandSpec" ]; then strandSpec=no; fi # strand specific, default is no
 if [ -z "$cutoff_quality" ]; then cutoff_quality=10; fi; # cutoff of read quality
 if [ -z "$mode" ]; then mode="intersection-nonempty"; fi;
 
 ID_feature="gene_id"
 DIR_output="${DIR}/htseq_counts_$(basename $DIR_input)"
-dir_logs=$PWD/logs
+dir_logs=${DIR_output}/logs
+
 echo "input folder -- " $DIR_input
 echo "output folder -- "$DIR_output
 
@@ -90,8 +91,8 @@ do
 #!/usr/bin/bash
 
 #SBATCH --cpus-per-task=$nb_cores
-#SBATCH --time=120
-#SBATCH --mem=6000
+#SBATCH --time=480
+#SBATCH --mem=16000
 #SBATCH --ntasks=1
 #SBATCH --nodes=1
 #SBATCH -o ${dir_logs}/$(basename $file).out
@@ -102,8 +103,7 @@ do
 # module load htseq/0.9.1-foss-2017a-python-2.7.13
 ml load htseq/0.11.2-foss-2018b-python-3.6.6
 
-htseq-count -f $format -s $strandSpec -a $cutoff_quality -t exon \
--i $ID_feature -m $mode $file $GTF \
+htseq-count -f $format -s $strandSpec -a $cutoff_quality -t exon -i $ID_feature -m $mode $file $GTF \
 > ${DIR_output}/$file_output
 
 EOF

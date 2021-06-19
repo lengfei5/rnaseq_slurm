@@ -49,8 +49,8 @@ case "$genome" in
 	;;
     
     "mm10")
-        echo "alignment to mm10 RefSeq"
-        GENOME="/groups/tanaka/People/current/jiwang/Genomes/Mouse/mm10_UCSC/mm10_Refseq_index_4star"
+        echo "alignment to mm10 ensemble"
+        GENOME="/groups/tanaka/People/current/jiwang/Genomes/mouse/mm10_ens/index_4star"
         ;;
 
     "hg38")
