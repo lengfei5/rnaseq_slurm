@@ -39,6 +39,6 @@ EOF
     
     cat $script;
     sbatch $script
-    break;
+    #break;
     
 done

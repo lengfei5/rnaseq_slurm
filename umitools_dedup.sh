@@ -24,7 +24,7 @@ do
 
 #SBATCH --cpus-per-task=1 
 #SBATCH --time=480 
-#SBATCH --mem=32G 
+#SBATCH --mem=64G 
 
 #SBATCH --ntasks=1
 #SBATCH --nodes=1
