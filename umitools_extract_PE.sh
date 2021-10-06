@@ -40,7 +40,8 @@ do
 #SBATCH --job-name umi_extract
 
 ml load umi-tools/1.0.0-foss-2018b-python-3.6.6
-umi_tools extract -I $seq2 -S ${DIR_OUT}/${fname}_umiExtracted_R2.fastq --bc-pattern=NNNNNNNNNNNN --read2-in=$seq1 --read2-out=${DIR_OUT}/${fname}_umiExtracted_R1.fastq
+umi_tools extract -I $seq2 -S ${DIR_OUT}/${fname}_umiExtracted_R2.fastq --extract-method regex \
+--bc-pattern='(?P<umi_1>.{12})(?P<discard_1>TTTTT)' --read2-in=$seq1 --read2-out=${DIR_OUT}/${fname}_umiExtracted_R1.fastq
 
 EOF
     
