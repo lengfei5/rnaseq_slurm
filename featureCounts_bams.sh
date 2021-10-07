@@ -3,22 +3,22 @@
 # Here teh gtf files used has all annotation including non-coding regions and miRNAs
 # because we want to counts reads not only for gene features but also biotypes (e.g. protein coding genes and miRNAs)
 ####################
-while getopts ":hD:p:" opts; do
+while getopts ":hD:a:" opts; do
     case "$opts" in
         "h")
             echo "script to quantify read count from aligned bam files)"
             echo "Two arguments required"
             echo "-D the directory of bam files "
-            echo "-p the peak file of format saf for feature count "
+            echo "-a gtf file or annotation file "
             echo "Usage:"
-            echo "$0 -D alignments/BAMs_All -p peaks_macs2_merged.saf"
+            echo "$0 -D alignments/BAMs_All -a "
             exit 0
             ;;
         "D")
             DIR_input="$OPTARG";
             ;;
-        "p")
-            SAF="$OPTARG";
+        "a")
+            gtf="$OPTARG";
             ;;
         "?")
             echo "Unknown option $opts"
@@ -33,14 +33,9 @@ nb_cores=4
 jobName='featurecounts'
 format=bam
 strandSpec=0;
-cutoff_quality=30
+cutoff_quality=10
 
-#SAF="/groups/tanaka/People/current/jiwang/projects/positional_memory/Data/R10723_atac/calledPeaks_pval.0.001/merge_peak.saf"
-
-#DIR=`pwd`
-#DIR_input="${PWD}/bams_used"
-
-DIR_output="${PWD}/featurecounts_peaks.Q${cutoff_quality}"
+DIR_output="${PWD}/featurecounts_Q${cutoff_quality}"
 dir_logs=$PWD/logs
 
 echo $DIR_input
@@ -72,7 +67,7 @@ do
 
 ml load subread/2.0.1-gcc-7.3.0-2.30
 
-featureCounts -F SAF -a ${SAF} -p -Q $cutoff_quality -T $nb_cores \
+featureCounts -t exon -a $gtf -Q $cutoff_quality -g gene_id -T $nb_cores \
 -o ${DIR_output}/${file_output}_featureCounts.txt \
 -s $strandSpec $file; \
 
@@ -80,5 +75,6 @@ EOF
 
     cat $script;  
     sbatch $script
-    #break;    
+    #break;
+    
 done
