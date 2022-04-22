@@ -49,10 +49,12 @@ do
 #SBATCH --job-name $jobName
 
 ml load cutadapt/1.18-foss-2018b-python-3.6.6
+ml load picard/2.20.6--0-biocontainers
+cutadapt -l 50 -f fastq -o ${out} $file > ${DIR_trimmed}/${out}.cutadapt.log;
+picard FastqToSam F1=${out} O=${out}.bam SM=sample001 RG=rg0013
 
-cutadapt -l 100 -f fastq -o ${out} $file > ${DIR_trimmed}/${out}.cutadapt.log;
 mv ${out} $DIR_trimmed
-
+mv ${out}.bam $DIR_trimmed
 
 EOF
 
