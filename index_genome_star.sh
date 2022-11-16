@@ -1,22 +1,26 @@
 #!/usr/bin/bash
-
-#SBATCH --cpus-per-task=32
+#SBATCH --cpus-per-task=16
 #SBATCH --qos=medium
-#SBATCH --time=2-00:00:00
-#SBATCH --partition=m
-#SBATCH --mem=500G
+#SBATCH --time=0-12:00:00
+#SBATCH --partition=c
+#SBATCH --mem=64G
 
 #SBATCH --ntasks=1
 #SBATCH --nodes=1
 #SBATCH -o genome_index.out
 #SBATCH -e genome_index.err
-#SBATCH --job-name index_ax6
+#SBATCH --job-name index_zebrafish
 
-module load star/2.5.2a-foss-2018b
+ml load star/2.7.1a-foss-2018b
 
-Genome='/groups/tanaka/People/current/jiwang/Genomes/axolotl/AmexG_v6.DD.corrected.round2.chr.fa'
-GTF='/groups/tanaka/People/current/jiwang/Genomes/axolotl/annotations/AmexT_v47.release.gtf'
-OUT=${PWD}/ax6
-mkdir -p ${PWD}/ax6
+Genome='/groups/tanaka/People/current/jiwang/Genomes/zebrafish/GRCz11/Danio_rerio.GRCz11.dna.primary_assembly.fa'
+GTF='/groups/tanaka/People/current/jiwang/Genomes/zebrafish/GRCz11/Danio_rerio.GRCz11.106.gtf.gz'
 
-STAR --runMode genomeGenerate --runThreadN 32 --genomeDir $OUT --genomeFastaFiles $Genome --sjdbGTFfile $GTF --limitGenomeGenerateRAM 429496729600 --genomeSAsparseD 1
+OUT=${PWD}/GRCz11
+mkdir -p $OUT
+
+STAR --runMode genomeGenerate \
+     --runThreadN 16 \
+     --genomeDir $OUT \
+     --genomeFastaFiles $Genome \
+     --sjdbGTFfile $GTF

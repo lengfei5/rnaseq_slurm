@@ -24,7 +24,7 @@ do
 
 #SBATCH --cpus-per-task=1 
 #SBATCH --time=240 
-#SBATCH --mem=32G
+#SBATCH --mem=16G
 
 #SBATCH --ntasks=1
 #SBATCH --nodes=1
@@ -33,7 +33,11 @@ do
 #SBATCH --job-name umi_extract
 
 #ml load umi-tools/1.0.0-foss-2018b-python-3.6.6
-umi_tools extract --stdin=$file --bc-pattern=NNNNNN --log=${dir_logs}/${fname}_processed.log --stdout ${DIR_OUT}/${fname}_umi_extract.fastq
+umi_tools extract \
+--stdin=$file \
+--bc-pattern=NNNNNN \
+--log=${dir_logs}/${fname}_processed.log \
+--stdout ${DIR_OUT}/${fname}_umi_extract.fastq
 
 EOF
     

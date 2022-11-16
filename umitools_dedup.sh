@@ -22,9 +22,9 @@ do
     cat <<EOF > $script
 #!/usr/bin/bash
 
-#SBATCH --cpus-per-task=1 
-#SBATCH --time=480 
-#SBATCH --mem=64G 
+#SBATCH --cpus-per-task=6
+#SBATCH --time=60
+#SBATCH --mem=16G 
 
 #SBATCH --ntasks=1
 #SBATCH --nodes=1
@@ -32,8 +32,20 @@ do
 #SBATCH -e ${dir_logs}/${fname}.err 
 #SBATCH --job-name ${jobName}
 
-ml load umi-tools/1.0.0-foss-2018b-python-3.6.6
-umi_tools dedup --stdin=$file --log=${dir_logs}/${fname}_${jobName}.log --stdout ${DIR_OUT}/${fname}_umiDedup.bam
+#ml purge
+#ml build-env/f2021
+#ml python/3.8.6-gcccore-10.3.0
+#ml pysam/0.16.0.1-gcc-10.2.0
+#ml umi-tools/1.1.2-foss-2020b-python-3.8.6
+#ml samtools/1.11-gcc-10.2.0
+singularity exec --no-home --home /tmp /resources/containers/UMI_tools_v1.1.1.long_chr_pysam.simg umi_tools dedup \
+--stdin=$file --log=${dir_logs}/${fname}_${jobName}.log --stdout ${DIR_OUT}/${fname}_umiDedup.bam
+
+samtools sort -@ 6 -o ${DIR_OUT}/${fname}_umiDedup_sorted.bam ${DIR_OUT}/${fname}_umiDedup.bam
+
+rm ${DIR_OUT}/${fname}_umiDedup.bam
+mv ${DIR_OUT}/${fname}_umiDedup_sorted.bam ${DIR_OUT}/${fname}_umiDedup.bam
+samtools index -c -m 14 ${DIR_OUT}/${fname}_umiDedup.bam
 
 EOF
     

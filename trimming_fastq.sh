@@ -8,7 +8,7 @@
 # add polyA trimming in cutadapt
 #####################################
 adaptor_seq="AGATCGGAAGAGCACACGTCTGAACTCCAGTCACNNNNNNATCTCGTATGCCGTCTTCTGCTTG" # quant-seq adaptor
-firstbpToClip=10 # nb of first bps were clipped for quant-seq
+firstbpToClip=6 # nb of first bps were clipped for quant-seq
 
 #adaptor_seq="A{10}"
 trim_polyA="TRUE";

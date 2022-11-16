@@ -7,7 +7,7 @@
 #SBATCH --partition=c
 #SBATCH --output=%x_%j.out
 #SBATCH --error=%x_%j.err
-#SBATCH --array=1-2
+#SBATCH --array=1-12
 
 ml load hisat2/2.1.0-foss-2018b
 ml load samtools/1.10-foss-2018b
@@ -24,3 +24,4 @@ hisat2 -p 16 --no-unal --summary-file ${ID}.log -k 5 --very-sensitive \
  
 samtools sort -@ 15 -l 9 -m 2G ${outDir}/${BaseName}.bam > ${outDir}/${BaseName}.sort.bam
 samtools index -@ 15 -c -m 14 ${outDir}/${BaseName}.sort.bam
+rm ${outDir}/${BaseName}.bam
