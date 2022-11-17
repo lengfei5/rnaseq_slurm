@@ -7,40 +7,33 @@
 #
 # add polyA trimming in cutadapt
 #####################################
-adaptor_seq="AGATCGGAAGAGCACACGTCTGAACTCCAGTCACNNNNNNATCTCGTATGCCGTCTTCTGCTTG" # quant-seq adaptor
-firstbpToClip=6 # nb of first bps were clipped for quant-seq
-
-#adaptor_seq="A{10}"
-trim_polyA="TRUE";
-
-minLength_overlap=3; # default 3 
-times_trimming=1;# default 1 
-minimumLength=20; # default 0
-
-
 DIR=`pwd`
 DIR_input="${DIR}/ngs_raw/FASTQs"
 DIR_trimmed="${DIR}/ngs_raw/FASTQs_trimmed"
-DIR_fastqc="${DIR}/ngs_raw/FASTQCs_trimmed/"
 
 mkdir -p $DIR_trimmed
-mkdir -p $DIR_fastqc
 mkdir -p "${DIR}/logs"
 
 jobName='trimming'
-for file in ${DIR_input}/*.fastq;
+
+for seq1 in `ls ${DIR_input}/*.fastq | grep "_R1"`;
 do
-    echo $file
-    fname=`basename ${file%.fastq}`
-    trimmed="${file%.fastq}_trimmed.fastq"
-    echo $fname $trimmed
+    fname="$(basename $seq1)"
+    SUFFIX=${fname#*_R1}
+    fname=${fname%_R1*}
     
-    cd $DIR_input;
-    out=`basename $trimmed`;
-    echo $out
+    seq2=${DIR_input}/${fname}_R2${SUFFIX};
+    
+    echo $fname
+    echo $seq1
+    echo $seq2
+    
+    #cd $DIR_input;
+    #out=`basename $trimmed`;
+    #echo $out
     
     # creat the script for each sample
-    script=$PWD/${fname}_${jobName}.sh
+    script=${DIR}/logs/${fname}_${jobName}.sh
     cat <<EOF > $script
 #!/usr/bin/bash
 
@@ -54,20 +47,24 @@ do
 #SBATCH --job-name $jobName
 
 module load cutadapt/1.18-foss-2018b-python-3.6.6
-#module load fastqc/0.11.8-java-1.8
 
-cutadapt -a $adaptor_seq -u $firstbpToClip \
--n $times_trimming --overlap $minLength_overlap -m $minimumLength -f fastq \
--o ${out} $file > ${DIR_trimmed}/${out}.cutadapt.log;
-mv ${out} $DIR_trimmed
+cutadapt -f fastq --cores=1 --pair-filter=any --overlap=3 --minimum-length=20 --times=1 \
+-a CTGTCTCTTATA -A AGATCGGAAGAGC \
+-o ${DIR_trimmed}/${fname}_adapTrimmed_R1.fastq \
+-p ${DIR_trimmed}/${fname}_adapTrimmed_R2.fastq \
+$seq1 $seq2 > ${DIR_trimmed}/${fname}_cutadapt1.txt
 
-#fastqc ${DIR_trimmed}/${out} -o ${DIR_fastqc}
+cutadapt -f fastq --cores=1 --pair-filter=any --overlap=3 --minimum-length=20 --times=1 \
+-a "A{100}" -A "A{100}" \
+-o ${DIR_trimmed}/${fname}_adapPolyA.trimmed_R1.fastq \
+-p ${DIR_trimmed}/${fname}_adapPolyA.trimmed_R2.fastq \
+${DIR_trimmed}/${fname}_adapTrimmed_R1.fastq ${DIR_trimmed}/${fname}_adapTrimmed_R2.fastq \
+> ${DIR_trimmed}/${fname}_cutadapt2.txt
 
 EOF
 
     cat $script;
     sbatch $script
-    cd $DIR;
     
     #break;
     

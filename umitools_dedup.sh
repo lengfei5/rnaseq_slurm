@@ -39,7 +39,8 @@ do
 #ml umi-tools/1.1.2-foss-2020b-python-3.8.6
 #ml samtools/1.11-gcc-10.2.0
 singularity exec --no-home --home /tmp /resources/containers/UMI_tools_v1.1.1.long_chr_pysam.simg umi_tools dedup \
---stdin=$file --log=${dir_logs}/${fname}_${jobName}.log --stdout ${DIR_OUT}/${fname}_umiDedup.bam
+--stdin=$file --log=${dir_logs}/${fname}_${jobName}.log --paired \
+--stdout ${DIR_OUT}/${fname}_umiDedup.bam
 
 samtools sort -@ 6 -o ${DIR_OUT}/${fname}_umiDedup_sorted.bam ${DIR_OUT}/${fname}_umiDedup.bam
 
