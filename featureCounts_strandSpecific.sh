@@ -63,7 +63,7 @@ do
 
 ml load subread/2.0.1-gcc-7.3.0-2.30
 
-featureCounts -t exon -a $gtf -Q $cutoff_quality \
+featureCounts -t exon -a $gtf -p -Q $cutoff_quality \
 -g gene_id -T $nb_cores \
 -o ${DIR_output}/${file_output}_featureCounts.txt \
 -s $strandSpec $file;
